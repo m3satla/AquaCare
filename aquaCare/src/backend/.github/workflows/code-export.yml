@@ -1,0 +1,191 @@
+name: Generate Code Images / PDFs
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "images / pdf / both"
+        type: choice
+        options: [images, pdf, both]
+        default: images
+      batch_size:
+        description: "Images per ZIP batch (only for images/both)"
+        type: number
+        default: 50
+      exts:
+        description: "Extensions to include (comma-separated)"
+        type: string
+        default: "ts,tsx,js,jsx,html,css,json,md"
+      group:
+        description: "PDF grouping"
+        type: choice
+        options: [frontend-backend, none]
+        default: frontend-backend
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pygments reportlab pillow
+
+      - name: Archive repo as zip
+        run: git archive -o repo.zip HEAD
+
+      - name: Create exporter script
+        shell: bash
+        run: |
+          cat > code_exporter.py << 'PY'
+          import argparse, os, zipfile
+          from pathlib import Path
+          from pygments import highlight
+          from pygments.lexers import get_lexer_for_filename, guess_lexer, TextLexer
+          from pygments.formatters import ImageFormatter
+          from pygments.util import ClassNotFound
+          from reportlab.lib.pagesizes import A4
+          from reportlab.platypus import SimpleDocTemplate, Paragraph, Preformatted, PageBreak
+          from reportlab.lib.styles import getSampleStyleSheet
+
+          DEFAULT_EXTS = [".ts",".tsx",".js",".jsx",".html",".css",".json",".md"]
+
+          def unzip(zip_path: Path, extract_to: Path):
+              extract_to.mkdir(parents=True, exist_ok=True)
+              with zipfile.ZipFile(zip_path, "r") as z: z.extractall(extract_to)
+
+          def list_code_files(root: Path, exts):
+              return sorted([p for p in root.rglob("*") if p.is_file() and p.suffix.lower() in exts])
+
+          def detect_group(p: Path):
+              s = str(p).replace("\\","/").lower()
+              if "/frontend/" in s: return "frontend"
+              if "/backend/"  in s: return "backend"
+              return "other"
+
+          def code_to_image(src: Path, dst: Path):
+              dst.parent.mkdir(parents=True, exist_ok=True)
+              try:
+                  text = src.read_text(encoding="utf-8", errors="ignore") or " "
+                  try: lexer = get_lexer_for_filename(str(src), text)
+                  except ClassNotFound: lexer = guess_lexer(text) if text.strip() else TextLexer()
+                  fmt = ImageFormatter(line_numbers=True, font_size=14)
+                  img_bytes = highlight(text, lexer, fmt)
+                  dst.write_bytes(img_bytes); return True
+              except Exception as e:
+                  print("ERR", src, e); return False
+
+          def build_pdf(files, out_path: Path, title: str):
+              styles = getSampleStyleSheet()
+              doc = SimpleDocTemplate(str(out_path), pagesize=A4)
+              story = [Paragraph(title, styles["Title"]), PageBreak()]
+              for fp in files:
+                  story.append(Paragraph(f"📄 {fp}", styles["Heading3"]))
+                  try: code = fp.read_text(encoding="utf-8", errors="ignore")
+                  except Exception as e:
+                      story.append(Paragraph(f"Error reading file: {e}", styles["Normal"]))
+                      story.append(PageBreak()); continue
+                  story.append(Preformatted(code, styles["Code"])); story.append(PageBreak())
+              doc.build(story)
+
+          def zip_in_batches(paths, zip_dir: Path, prefix="code_images", batch_size=50):
+              zip_dir.mkdir(parents=True, exist_ok=True)
+              b=1
+              for i in range(0,len(paths),batch_size):
+                  chunk=paths[i:i+batch_size]
+                  zpath = zip_dir / f"{prefix}_{b:02d}.zip"
+                  with zipfile.ZipFile(zpath,"w",compression=zipfile.ZIP_DEFLATED) as z:
+                      for p in chunk: z.write(p, arcname=p.name)
+                  b+=1
+
+          def main():
+              ap = argparse.ArgumentParser()
+              ap.add_argument("--zip", required=True)
+              ap.add_argument("--out", default="export_out")
+              ap.add_argument("--mode", choices=["images","pdf","both"], default="images")
+              ap.add_argument("--group", choices=["frontend-backend","none"], default="frontend-backend")
+              ap.add_argument("--exts", default=",".join(DEFAULT_EXTS))
+              ap.add_argument("--images-batch-size", type=int, default=50)
+              args = ap.parse_args()
+
+              zip_path = Path(args.zip).resolve()
+              out_dir  = Path(args.out).resolve()
+              work_dir = out_dir / "_unzipped"
+              out_dir.mkdir(parents=True, exist_ok=True)
+              unzip(zip_path, work_dir)
+
+              exts = [("." + e.strip().lstrip(".")).lower() for e in args.exts.split(",") if e.strip()]
+              files = list_code_files(work_dir, exts)
+
+              if args.mode in ("images","both"):
+                  imgs_root = out_dir / "images"; imgs_root.mkdir(parents=True, exist_ok=True)
+                  created=[]
+                  for fp in files:
+                      rel_safe = "_".join(fp.relative_to(work_dir).parts)
+                      img = imgs_root / f"{rel_path_safe(rel_safe)}.png"
+                      if code_to_image(fp, img): created.append(img)
+                  zip_in_batches(created, out_dir / "images_zips", batch_size=args.images_batch_size)
+
+              if args.mode in ("pdf","both"):
+                  pdf_dir = out_dir / "pdf"; pdf_dir.mkdir(parents=True, exist_ok=True)
+                  if args.group=="frontend-backend":
+                      groups={"frontend":[],"backend":[],"other":[]}
+                      for f in files: groups[detect_group(f)].append(f)
+                      if groups["backend"]:  build_pdf(groups["backend"],  pdf_dir / "project_code_backend.pdf",  "Backend Code Files")
+                      if groups["frontend"]: build_pdf(groups["frontend"], pdf_dir / "project_code_frontend.pdf", "Frontend Code Files")
+                      if groups["other"]:    build_pdf(groups["other"],    pdf_dir / "project_code_other.pdf",    "Other Project Files")
+                  else:
+                      build_pdf(files, pdf_dir / "project_code_all.pdf", "Project Code Files")
+
+              print("[✓] Done. Output under:", out_dir)
+
+          def rel_path_safe(p: str) -> str:
+              # הופך הפרדות ושומר על שמות נקיים לקובץ
+              return p.replace("/", "_").replace("\\", "_")
+
+          if __name__ == "__main__":
+              main()
+          PY
+
+      - name: Run exporter
+        run: |
+          python code_exporter.py \
+            --zip repo.zip \
+            --out export_out \
+            --mode "${{ github.event.inputs.mode }}" \
+            --group "${{ github.event.inputs.group }}" \
+            --exts "${{ github.event.inputs.exts }}" \
+            --images-batch-size "${{ github.event.inputs.batch_size }}"
+
+      - name: Upload images batches (if any)
+        if: ${{ contains(fromJSON('["images","both"]'), github.event.inputs.mode) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-images-batches
+          path: export_out/images_zips
+          if-no-files-found: ignore
+          compression-level: 9
+          retention-days: 7
+
+      - name: Upload PDFs (if any)
+        if: ${{ contains(fromJSON('["pdf","both"]'), github.event.inputs.mode) }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-pdfs
+          path: export_out/pdf
+          if-no-files-found: ignore
+          compression-level: 9
+          retention-days: 7

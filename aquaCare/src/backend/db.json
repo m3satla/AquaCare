@@ -1,0 +1,232 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "m3satla",
+      "email": "Liranbensimon18@gmail.com",
+      "firstName": "Liran",
+      "lastName": "BenSimon",
+      "role": "Admin",
+      "dateOfBirth": "2003-03-20",
+      "password": "Liranbs321",
+      "gender": "male",
+      "poolId": "101",
+      "dayOff": "Saturday"
+    },
+    {
+      "id": "2",
+      "username": "daniel",
+      "email": "daniel@gmail.com",
+      "firstName": "Daniel",
+      "lastName": "Fri",
+      "role": "patient",
+      "dateOfBirth": "2003-03-20",
+      "password": "Liranbs321",
+      "gender": "male",
+      "poolId": "101"
+    },
+    {
+      "id": "3",
+      "username": "bubu",
+      "email": "bubu@gmail.com",
+      "firstName": "bubu",
+      "lastName": "bub",
+      "role": "patient",
+      "dateOfBirth": "2003-03-20",
+      "password": "Liranbs321",
+      "gender": "female",
+      "poolId": "102"
+    },
+    {
+      "id": "4",
+      "username": "Admin_jerusalem",
+      "email": "Admin_jeru@gmail.com",
+      "firstName": "Rachel",
+      "lastName": "Cohen",
+      "role": "Admin",
+      "dateOfBirth": "1980-06-12",
+      "password": "AdminJeru123",
+      "gender": "female",
+      "poolId": "102",
+      "dayOff": "Tuesday"
+    },
+    {
+      "id": "5",
+      "username": "Admin_haifa",
+      "email": "Admin_haifa@gmail.com",
+      "firstName": "Avi",
+      "lastName": "Levi",
+      "role": "Admin",
+      "dateOfBirth": "1975-08-22",
+      "password": "AdminHaifa123",
+      "gender": "male",
+      "poolId": "103",
+      "dayOff": "Friday"
+    },
+    {
+      "id": "6",
+      "username": "therapist_tlv1",
+      "email": "therapist1_tlv@gmail.com",
+      "firstName": "Michael",
+      "lastName": "Levi",
+      "role": "therapist",
+      "dateOfBirth": "1970-04-10",
+      "password": "TherapistTlv321",
+      "gender": "male",
+      "poolId": "101"
+    },
+    {
+      "id": "7",
+      "username": "therapist_tlv2",
+      "email": "therapist2_tlv@gmail.com",
+      "firstName": "Omer",
+      "lastName": "Shalev",
+      "role": "therapist",
+      "dateOfBirth": "1982-03-21",
+      "password": "TherapistTlv456",
+      "gender": "male",
+      "poolId": "101"
+    },
+    {
+      "id": "8",
+      "username": "therapist_jeru",
+      "email": "therapist_jeru@gmail.com",
+      "firstName": "Rotem",
+      "lastName": "Cohen",
+      "role": "therapist",
+      "dateOfBirth": "1985-09-15",
+      "password": "TherapistJeru123",
+      "gender": "female",
+      "poolId": "102"
+    },
+    {
+      "id": "9",
+      "username": "therapist_haifa",
+      "email": "therapist_haifa@gmail.com",
+      "firstName": "Naama",
+      "lastName": "Israeli",
+      "role": "therapist",
+      "dateOfBirth": "1990-01-30",
+      "password": "TherapistHaifa321",
+      "gender": "female",
+      "poolId": "103"
+    }
+  ],
+  "appointments": [
+    {
+      "id": "1",
+      "userId": "2",
+      "date": "2025-03-02T14:00:00",
+      "status": "pending"
+    },
+    {
+      "id": "2",
+      "userId": "3",
+      "date": "2025-03-05T10:00:00",
+      "status": "confirmed"
+    }
+  ],
+  "pools": [
+    {
+      "id": "101",
+      "name": "מרכז הידרותרפי תל אביב",
+      "location": "תל אביב",
+      "contact": "03-1234567",
+      "description": "בריכת טיפול ייעודית לילדים ומבוגרים.",
+      "managerId": "1",
+      "dayOff": "Sunday"
+    },
+    {
+      "id": "102",
+      "name": "בריכת השחייה ירושלים",
+      "location": "ירושלים",
+      "contact": "02-9876543",
+      "description": "מרכז טיפול ושיקום במים.",
+      "managerId": "4",
+      "dayOff": "Tuesday"
+    },
+    {
+      "id": "103",
+      "name": "מרכז הידרותרפי חיפה",
+      "location": "חיפה",
+      "contact": "04-7654321",
+      "description": "בריכה טיפולית לטיפולי פיזיותרפיה והידרותרפיה.",
+      "managerId": "5",
+      "dayOff": "Friday"
+    }
+  ],
+  "therapists": [
+    {
+      "id": "6",
+      "name": "Michael Levi",
+      "specialty": "הידרותרפיה",
+      "contact": "054-1234567"
+    },
+    {
+      "id": "7",
+      "name": "Omer Shalev",
+      "specialty": "טיפול פיזיותרפי במים",
+      "contact": "050-7654321"
+    },
+    {
+      "id": "8",
+      "name": "Rotem Cohen",
+      "specialty": "שיקום במים",
+      "contact": "050-9876543"
+    },
+    {
+      "id": "9",
+      "name": "Naama Israeli",
+      "specialty": "פיזיותרפיה הידרותרפית",
+      "contact": "052-7654321"
+    }
+  ],
+  "requests": [
+    {
+      "id": "fca3",
+      "type": "complaint",
+      "message": "sd;mglk",
+      "managerId": 1,
+      "date": "2025-03-12T13:56:14.618Z"
+    }
+  ],
+  "sensors": [
+    {
+      "id": 1,
+      "name": "חום קיצוני",
+      "temperature": 41.2,
+      "chlorine": 2.7,
+      "showerTemp": 43.5,
+      "acidity": 7.0
+    },
+    {
+      "id": 2,
+      "name": "מים מזוהמים",
+      "temperature": 35.0,
+      "chlorine": 1.1,
+      "showerTemp": 38.0,
+      "acidity": 5.5
+    },
+    {
+      "id": 3,
+      "name": "רגיל",
+      "temperature": 36.5,
+      "chlorine": 2.5,
+      "showerTemp": 37.0,
+      "acidity": 7.2
+    },
+    {
+      "id": 4,
+      "name": "תחזוקה",
+      "temperature": 0.0,
+      "chlorine": 0.0,
+      "showerTemp": 0.0,
+      "acidity": 0.0
+    }
+  ],
+  "payments": [
+    { "id": 1, "date": "12/03/2024", "amount": "150 ₪", "status": "שולם" },
+    { "id": 2, "date": "05/02/2024", "amount": "200 ₪", "status": "שולם" },
+    { "id": 3, "date": "20/01/2024", "amount": "180 ₪", "status": "שולם" }
+  ]
+}

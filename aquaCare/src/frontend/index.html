@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="אקווה קאר - מערכת ניהול בריכות שחייה עם תכונות נגישות מלאות" />
+    <meta name="keywords" content="בריכה, שחייה, ניהול, נגישות, accessibility" />
+    <title>AquaCare - אקווה קאר</title>
+    
+    <!-- Accessibility and RTL support -->
+    <style>
+      /* Basic RTL and accessibility setup */
+      :root {
+        --transition-duration: 0.3s;
+      }
+      
+      * {
+        box-sizing: border-box;
+      }
+      
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      body {
+        margin: 0;
+        padding: 0;
+        direction: rtl;
+        text-align: right;
+      }
+      
+      /* Reduced motion for users who prefer it */
+      @media (prefers-reduced-motion: reduce) {
+        :root {
+          --transition-duration: 0.01ms;
+        }
+        
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+      
+      /* Focus styles for better accessibility */
+      *:focus {
+        outline: 2px solid #0066cc;
+        outline-offset: 2px;
+      }
+      
+      /* Loading indicator */
+      .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        direction: rtl;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/frontend/components/main.tsx"></script>
+  </body>
+</html>

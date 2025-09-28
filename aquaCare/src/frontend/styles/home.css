@@ -1,0 +1,63 @@
+/* styles/home.css */
+
+@keyframes waveAnimation {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  
+  .waveContainer {
+    position: relative;
+    min-height: 300px;
+    overflow: hidden;
+    padding-top: 2rem; /* קצת ריווח למעלה */
+  }
+  
+  .waveHeader {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .waveWrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+  }
+  
+  .wave {
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+    background-repeat: repeat-x;
+    animation: waveAnimation 8s linear infinite;
+  }
+  
+  .waveSecondary {
+    opacity: 0.5;
+    animation-delay: 2s;
+  }
+  
+
+/* 📱 התאמה למובייל */
+@media (max-width: 600px) {
+  body, .sensor-container, .control-buttons, .sensor-grid, .water-page {
+    padding: 10px !important;
+    font-size: 0.95rem;
+  }
+  .sensor-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  .control-btn {
+    width: 100% !important;
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,52 @@
+.image-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px; /* ניתן לשנות בהתאם לצורך */
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  
+  .background-image {
+    width: 100%;
+    display: block;
+  }
+  
+  /* שכבת האנימציה – גל שקוף */
+  .overlay-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%; /* גודל מוגדל כדי לאפשר תנועה חלקה */
+    height: 100%;
+    background: url('/assets/wave.svg') repeat-x;
+    background-size: contain;
+    opacity: 0.5;
+    animation: waveMove 10s linear infinite;
+  }
+  
+  /* הגדרת keyframes לאנימציית גל */
+  @keyframes waveMove {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  
+
+/* 📱 התאמה למובייל */
+@media (max-width: 600px) {
+  body, .sensor-container, .control-buttons, .sensor-grid, .water-page {
+    padding: 10px !important;
+    font-size: 0.95rem;
+  }
+  .sensor-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  .control-btn {
+    width: 100% !important;
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,114 @@
+/* ✅ מבנה כללי */
+.sensor-container {
+  background: linear-gradient(to bottom, #4A69BD, #1E3799);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-radius: 15px;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* ✅ תאריך ושעה */
+.sensor-date {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* ✅ טמפרטורה ראשית (כמו בתמונה) */
+.sensor-main-temp {
+  font-size: 50px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* ✅ גריד לחיישנים */
+.sensor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* ✅ עיצוב חיישנים */
+.sensor-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+}
+
+.sensor-item:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.sensor-item:active {
+  transform: scale(0.95);
+}
+
+.sensor-icon {
+  font-size: 30px;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.sensor-value {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sensor-label {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* ✅ כפתורי שליטה */
+.control-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* ✅ עיצוב כפתורים */
+.control-btn {
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 20px;
+  font-weight: bold;
+  color: white;
+  text-transform: none;
+  min-width: 160px;
+  transition: all 0.3s ease-in-out;
+}
+
+.control-btn:hover {
+  transform: scale(1.05);
+}
+
+.control-icon {
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+
+/* 📱 התאמה למובייל */
+@media (max-width: 600px) {
+  body, .sensor-container, .control-buttons, .sensor-grid, .water-page {
+    padding: 10px !important;
+    font-size: 0.95rem;
+  }
+  .sensor-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  .control-btn {
+    width: 100% !important;
+    font-size: 0.9rem;
+  }
+}

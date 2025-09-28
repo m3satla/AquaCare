@@ -1,0 +1,17 @@
+
+
+/* 📱 התאמה למובייל */
+@media (max-width: 600px) {
+  body, .sensor-container, .control-buttons, .sensor-grid, .water-page {
+    padding: 10px !important;
+    font-size: 0.95rem;
+  }
+  .sensor-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+  .control-btn {
+    width: 100% !important;
+    font-size: 0.9rem;
+  }
+}
